@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #fbf5ee;
+  --color-rose: #d98a98;
+  --color-dusty: #c0788a;
+  --color-plum: #4a1f2e;
+  --color-gold: #c3a46b;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Jost", system-ui, sans-serif;
+  --font-script: "Pinyon Script", cursive;
+}
+
+html, body, #root { min-height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-plum);
+  background: linear-gradient(165deg, #fdf8f1 0%, #f7e2dd 50%, #eec9c9 100%) fixed;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* paper grain */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: .1; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+/* soft vignette */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(120, 50, 70, .14) 100%);
+}
+
+/* slow drifting glow behind everything */
+.orb { position: fixed; border-radius: 50%; filter: blur(70px); pointer-events: none; z-index: 0; animation: drift 22s ease-in-out infinite alternate; }
+@keyframes drift { to { transform: translate(40px, -50px) scale(1.15); } }
+
+.opening-orbit {
+  animation: orbit-breathe 7s ease-in-out infinite;
+}
+.opening-orbit::before,
+.opening-orbit::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: var(--color-rose);
+  box-shadow: 0 0 18px rgba(217, 138, 152, .55);
+}
+.opening-orbit::before { width: 7px; height: 7px; top: 10%; left: 18%; }
+.opening-orbit::after { width: 4px; height: 4px; right: 5%; bottom: 24%; }
+@keyframes orbit-breathe {
+  0%, 100% { transform: scale(.96) rotate(0deg); opacity: .55; }
+  50% { transform: scale(1.04) rotate(12deg); opacity: 1; }
+}
+
+/* the invitation card: paper with a double gold frame */
+.paper {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255,252,247,.88), rgba(250,232,228,.68));
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(195,164,107,.55);
+  box-shadow: 0 40px 70px -35px rgba(74,31,46,.4), 0 2px 0 rgba(255,255,255,.8) inset;
+  transform-style: preserve-3d;
+}
+.paper::before {
+  content: ""; position: absolute; inset: 8px; border: 1px solid rgba(195,164,107,.3); border-radius: inherit; pointer-events: none;
+}
+
+/* wax seal */
+.seal {
+  background: radial-gradient(circle at 32% 28%, #e8a3b0 0%, #c0788a 45%, #8c3a52 100%);
+  box-shadow: 0 18px 30px -12px rgba(140,58,82,.7), inset 0 2px 4px rgba(255,255,255,.35), inset 0 -4px 8px rgba(70,15,35,.35);
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #dc93a1, #b4627a);
+  color: #fff8f3;
+  box-shadow: 0 18px 34px -14px rgba(180,98,122,.9), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.btn-yes::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%);
+  transform: translateX(-120%); transition: transform 1s ease;
+}
+.btn-yes:hover::after { transform: translateX(120%); }
+.btn-yes:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 5px;
+}
+
+.shine { background: linear-gradient(100deg, #4a1f2e 20%, #b4627a 45%, #4a1f2e 70%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 9s linear infinite; }
+@keyframes shine { to { background-position: 200% center; } }
+
+@media (max-width: 640px) {
+  .opening-orbit { width: 20rem; height: 20rem; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
